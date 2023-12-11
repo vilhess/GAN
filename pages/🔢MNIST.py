@@ -67,7 +67,7 @@ model_epoch = model_epoch - 1
 
 model = Generator(2).to(DEVICE)
 load_checkpoint(checkpoint=torch.load(
-    f"weights/checkpoint_{model_epoch}.pth.tar"), model=model)
+    f"weights/checkpoint_{model_epoch}.pth.tar", map_location=DEVICE), model=model)
 model.eval()
 st.subheader("")
 st.markdown("<h2 style='text-align: center;'>🎨 Generate New Images</h2>",
