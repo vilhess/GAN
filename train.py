@@ -12,7 +12,7 @@ import os
 
 load_dotenv()
 
-DEVICE = os.getenv('DEVICE')
+DEVICE = torch.device(os.getenv('DEVICE'))
 
 criterion = nn.BCEWithLogitsLoss()
 z_dim = 2
@@ -53,7 +53,7 @@ def weights_init(m):
         torch.nn.init.constant_(m.bias, 0)
 
 
-# gen = gen.apply(weights_init)
+gen = gen.apply(weights_init)
 disc = disc.apply(weights_init)
 
 
@@ -107,7 +107,6 @@ for epoch in range(n_epochs):
             mean_generator_loss = 0
             mean_discriminator_loss = 0
         cur_step += 1
-    checkpoint = {"state_dict": gen.state_dict(),
-                  "optimizer": gen_opt.state_dict(),
-                  "epoch": epoch}
+
+    checkpoint = gen.state_dict()
     save_checkpoint(checkpoint, epoch=epoch)

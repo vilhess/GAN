@@ -9,7 +9,7 @@ import os
 
 load_dotenv()
 
-DEVICE = os.getenv('DEVICE')
+DEVICE = torch.device(os.getenv('DEVICE'))
 
 st.set_page_config(
     page_title='Deep Convolutional Generative Adversarial Network (DCGAN)')
@@ -65,7 +65,6 @@ model_epoch = st.slider("Choose the epoch of the model you want to use",
                         1, 50, 50, step=1)
 model_epoch = model_epoch - 1
 
-device = 'cpu'
 model = Generator(2).to(DEVICE)
 load_checkpoint(checkpoint=torch.load(
     f"weights/checkpoint_{model_epoch}.pth.tar"), model=model)
@@ -90,7 +89,7 @@ with col1:
                        float(-10), float(10), float(0), step=0.1)
 
 with col2:
-    epsilon = torch.tensor([[coord1, coord2]]).to(device)
+    epsilon = torch.tensor([[coord1, coord2]]).to(DEVICE)
     fake = model(epsilon).detach()
     fake = (fake + 1) / 2  # Scale the generated images to the range [0, 1]
     fig = plt.figure(figsize=(5, 5))

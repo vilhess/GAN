@@ -12,7 +12,7 @@ import os
 
 load_dotenv()
 
-DEVICE = os.getenv('DEVICE')
+DEVICE = torch.device(os.getenv('DEVICE'))
 
 
 class CNNet(nn.Module):
@@ -68,7 +68,7 @@ def get_distrib():
 
     model = Generator(2).to(DEVICE)
     load_checkpoint(
-        checkpoint=torch.load(f'weights/checkpoint_{model_epoch}.pth.tar'), model=model)
+        checkpoint=torch.load(f'weights/checkpoint_{model_epoch}.pth.tar', map_location=DEVICE), model=model)
     model.eval()
 
     res = []

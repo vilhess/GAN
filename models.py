@@ -2,10 +2,6 @@ import torch
 import torch.nn as nn
 
 
-# UNQ_C1 (UNIQUE CELL IDENTIFIER, DO NOT EDIT)
-# GRADED FUNCTION: Generator
-
-
 class Generator(nn.Module):
     '''
     Generator Class
@@ -77,7 +73,7 @@ class Generator(nn.Module):
         return self.gen(x)
 
 
-def get_noise(n_samples, z_dim, device='cpu'):
+def get_noise(n_samples, z_dim, device):
     '''
     Function for creating noise vectors: Given the dimensions (n_samples, z_dim)
     creates a tensor of that shape filled with random numbers from the normal distribution.
@@ -143,4 +139,3 @@ class Discriminator(nn.Module):
     def forward(self, image):
         disc_pred = self.disc(image)
         return disc_pred.view(len(disc_pred), -1)
-
