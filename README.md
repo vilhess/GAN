@@ -1,4 +1,4 @@
-link of the app : 
+link of the app : https://deepconvgan.streamlit.app
 
 # GAN AI Model with Streamlit 🤖🎨
 
