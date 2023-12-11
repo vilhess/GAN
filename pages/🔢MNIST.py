@@ -4,6 +4,12 @@ import torch
 import matplotlib.pyplot as plt
 from models import Generator
 from utils import load_checkpoint
+from dotenv import load_dotenv
+import os
+
+load_dotenv()
+
+DEVICE = os.getenv('DEVICE')
 
 st.set_page_config(
     page_title='Deep Convolutional Generative Adversarial Network (DCGAN)')
@@ -59,10 +65,10 @@ model_epoch = st.slider("Choose the epoch of the model you want to use",
                         1, 50, 50, step=1)
 model_epoch = model_epoch - 1
 
-device = 'mps'
-model = Generator(2).to(device)
+device = 'cpu'
+model = Generator(2).to(DEVICE)
 load_checkpoint(checkpoint=torch.load(
-    f"weights/checkpoint_{model_epoch}.pth.tar").get('state_dict'), model=model)
+    f"weights/checkpoint_{model_epoch}.pth.tar"), model=model)
 model.eval()
 st.subheader("")
 st.markdown("<h2 style='text-align: center;'>🎨 Generate New Images</h2>",

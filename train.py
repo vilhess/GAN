@@ -7,6 +7,12 @@ from torchvision.datasets import MNIST
 from tqdm import tqdm
 from models import Discriminator, Generator, get_noise
 from utils import save_checkpoint, show_tensor_images
+from dotenv import load_dotenv
+import os
+
+load_dotenv()
+
+DEVICE = os.getenv('DEVICE')
 
 criterion = nn.BCEWithLogitsLoss()
 z_dim = 2
@@ -17,7 +23,6 @@ lr = 0.0002
 
 beta_1 = 0.5
 beta_2 = 0.999
-device = 'mps'
 
 # You can tranform the image values to be between -1 and 1 (the range of the tanh activation)
 transform = transforms.Compose([
@@ -31,9 +36,9 @@ dataloader = DataLoader(
     shuffle=True)
 
 
-gen = Generator(z_dim).to(device)
+gen = Generator(z_dim).to(DEVICE)
 gen_opt = torch.optim.Adam(gen.parameters(), lr=lr, betas=(beta_1, beta_2))
-disc = Discriminator().to(device)
+disc = Discriminator().to(DEVICE)
 disc_opt = torch.optim.Adam(disc.parameters(), lr=lr, betas=(beta_1, beta_2))
 
 # You initialize the weights to the normal distribution
@@ -60,11 +65,11 @@ for epoch in range(n_epochs):
     # Dataloader returns the batches
     for real, _ in tqdm(dataloader):
         cur_batch_size = len(real)
-        real = real.to(device)
+        real = real.to(DEVICE)
 
         ## Update discriminator ##
         disc_opt.zero_grad()
-        fake_noise = get_noise(cur_batch_size, z_dim, device=device)
+        fake_noise = get_noise(cur_batch_size, z_dim, device=DEVICE)
         fake = gen(fake_noise)
         disc_fake_pred = disc(fake.detach())
         disc_fake_loss = criterion(
@@ -83,7 +88,7 @@ for epoch in range(n_epochs):
 
         ## Update generator ##
         gen_opt.zero_grad()
-        fake_noise_2 = get_noise(cur_batch_size, z_dim, device=device)
+        fake_noise_2 = get_noise(cur_batch_size, z_dim, device=DEVICE)
         fake_2 = gen(fake_noise_2)
         disc_fake_pred = disc(fake_2)
         gen_loss = criterion(disc_fake_pred, torch.ones_like(disc_fake_pred))

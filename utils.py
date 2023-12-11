@@ -7,6 +7,12 @@ from models import Generator
 import numpy as np
 from torchvision import transforms
 from torchvision.utils import make_grid
+from dotenv import load_dotenv
+import os
+
+load_dotenv()
+
+DEVICE = os.getenv('DEVICE')
 
 
 class CNNet(nn.Module):
@@ -60,10 +66,9 @@ def recognition_digit(pil_img):
 def get_distrib():
     model_epoch = 49
 
-    device = 'mps'
-    model = Generator(2).to(device)
+    model = Generator(2).to(DEVICE)
     load_checkpoint(
-        checkpoint=torch.load(f'weights/checkpoint_{model_epoch}.pth.tar').get('state_dict'), model=model)
+        checkpoint=torch.load(f'weights/checkpoint_{model_epoch}.pth.tar'), model=model)
     model.eval()
 
     res = []
@@ -72,7 +77,7 @@ def get_distrib():
 
     for i in range(20000):
         a, b = (r1 - r2) * torch.rand(2) + r2
-        coord = torch.tensor([a, b]).to(device)
+        coord = torch.tensor([a, b]).to(DEVICE)
         fake = model(coord.unsqueeze(0)).detach()
         fake = (fake + 1) / 2
         fake = fake[0][0].cpu().numpy()
