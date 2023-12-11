@@ -1,6 +1,7 @@
 matplotlib
 numpy
 Pillow
+python-dotenv
 streamlit
 torch
 torchvision
